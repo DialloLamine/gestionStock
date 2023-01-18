@@ -1,0 +1,55 @@
+
+---
+spring:
+  config:
+    activate:
+      on-profile: testU
+  sql:
+    init:
+      mode: never
+  jpa:
+    hibernate.ddl-auto: create-drop
+     
+---
+spring:
+  config:
+    activate:
+      on-profile: dev   #Syntaxe change en Springboot2.4 ==> spring.config.activate.on-profile: dev
+  datasource:
+    # url: jdbc:h2:tcp://localhost/database/pidDB_2122
+    url: jdbc:h2:~/TFE_DB/TFE_22_23
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+       
+  sql:
+    init:
+      mode: always #initialise via un fichier data-${plateform}.sql sinon data.sql si la plateforme n'est pas prÃ©cisÃ©e
+      platform: h2  #permet de prÃ©ciser la plateforme ==> data-h2.sql'
+  jpa:
+    hibernate.ddl-auto: update
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true #DiffÃ¨re l'init de la bd par data-h2.sql
+    
+  h2.console:
+    enabled: true
+    path: /h2
+    settings.trace: false
+#Pour rendre visible tous les endpoints des actuators sur l'URL   /actuator
+# on peut aussi spÃ©cifier les actuators dÃ©sirÃ©s: beans, mappings 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 
+        - '*'  #expose tous les endpoints
+
+#Logger
+logging:
+  level:
+    '[org.isfce.pid.controller]': DEBUG
+    '[org.hibernate.SQL]': DEBUG
+    '[org.hibernate.type.descriptor.sql.BasicBinder]': TRACE
+   # Show Hibernate SQL  (Ligne1: Log SQL Query. Ligne2: log Prepared statement parameters)
+
+  
